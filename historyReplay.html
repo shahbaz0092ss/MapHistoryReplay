@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: calc(100vh - 50px);
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .buttons{
+        position: absolute;
+        top: 20px;
+        left:200px;
+        z-index:999;
+       
+      }
+      .timeline{
+         background-color: #000;
+        color: #fff;
+        padding: 10px 0px;
+        display: inline-block;
+        border: none;
+        margin: 0px;
+        margin-left: -5px;
+        width: 10px;
+      }
+       .timeline:nth-child(1){
+         margin-left: 0px;
+       }
+       .timeline:focus{
+        outline: none;;
+       }
+      .player{
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        z-index: 999;
+        height: 50px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 100%;
+        background-color: #262626;
+      }
+      .timebox{
+      /*  position: absolute;
+        top: 8px;
+        left: 40px;*/
+
+      }
+      .playbtn, .pausebtn{
+        background-color: transparent;
+        border: none;
+        color: #9e9e9e;
+        margin-top: 5px;
+        /*display: inline-block;*/
+            border-right: 1px solid #000;
+    box-shadow: 0.25px 0px 0px 0px #9e9e9e;
+        padding-right: 20px;
+      }
+
+      .playbtn:hover , .pausebtn:hover{
+        cursor: pointer;
+      }
+       .playbtn:focus , .pausebtn:focus{
+        outline:  none !important;
+        /*color: blue;*/
+      }
+      .dragger{
+         position: absolute;
+        margin-top: -18px;
+        width: 3px; 
+        height: 16px;
+        background-color: #e00c0c;
+          display: inline-block;
+          margin-left: 0px;
+          transition: left .15s;
+          margin-left: 1px;
+      }
+
+      .percent-text{
+
+
+      }
+
+      .nav-link{
+        color: #9e9e9e !important;
+
+      }
+
+      .bg-dark{
+         background-color: #262626 !important;
+      }
+      .collapse{
+        margin-top: 5px !important;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div id="map"></div>
+
+
+    <nav class="navbar fixed-bottom navbar-expand-lg  bg-dark pt-2">
+  <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item ">
+         <button class="playbtn " id="playbtn" onclick="FNinterval();"> <i class="fas fa-play fa-1x "></i> </button>
+<button class="pausebtn" id="pausebtn" onclick="FNpause();"><i class="fas fa-pause fa-1x "></i></button>
+      </li>
+      <li class="nav-item">
+        <div class="timebox  ml-5  ">
+       <button  class="timeline"  onclick="versionThree(1);"></button>
+<button  class="timeline"  onclick="versionThree(2);"></button>
+<button  class="timeline"  onclick="versionThree(3);"></button>
+<button  class="timeline"  onclick="versionThree(4);"></button>
+<button  class="timeline"  onclick="versionThree(5);"></button>
+<button  class="timeline"  onclick="versionThree(6);"></button>
+<button  class="timeline"  onclick="versionThree(7);"></button>
+<button  class="timeline"  onclick="versionThree(8);"></button>
+<button  class="timeline"  onclick="versionThree(9);"></button>
+<button  class="timeline"  onclick="versionThree(10);"></button>
+<button  class="timeline"  onclick="versionThree(11);"></button>
+<button  class="timeline"  onclick="versionThree(12);"></button>
+<button  class="timeline"  onclick="versionThree(13);"></button>
+<button  class="timeline"  onclick="versionThree(14);"></button>
+<button  class="timeline"  onclick="versionThree(15);"></button>
+<button  class="timeline"  onclick="versionThree(16);"></button>
+<button  class="timeline"  onclick="versionThree(17);"></button>
+<button  class="timeline"  onclick="versionThree(18);"></button>
+<button  class="timeline"  onclick="versionThree(19);"></button>
+<button  class="timeline"  onclick="versionThree(20);"></button>
+<button  class="timeline"  onclick="versionThree(21);"></button>
+<button  class="timeline"  onclick="versionThree(22);"></button>
+<button  class="timeline"  onclick="versionThree(23);"></button>
+<button  class="timeline"  onclick="versionThree(24);"></button>
+<button  class="timeline"  onclick="versionThree(25);"></button>
+<button  class="timeline"  onclick="versionThree(26);"></button>
+<button  class="timeline"  onclick="versionThree(27);"></button>
+<button  class="timeline"  onclick="versionThree(28);"></button>
+<button  class="timeline"  onclick="versionThree(29);"></button>
+<button  class="timeline"  onclick="versionThree(30);"></button>
+<button  class="timeline"  onclick="versionThree(41);"></button>
+<button  class="timeline"  onclick="versionThree(42);"></button>
+<button  class="timeline"  onclick="versionThree(43);"></button>
+<button  class="timeline"  onclick="versionThree(44);"></button>
+<button  class="timeline"  onclick="versionThree(45);"></button>
+<button  class="timeline"  onclick="versionThree(46);"></button>
+<button  class="timeline"  onclick="versionThree(47);"></button>
+<button  class="timeline"  onclick="versionThree(48);"></button>
+<button  class="timeline"  onclick="versionThree(49);"></button>
+<button  class="timeline"  onclick="versionThree(50);"></button>
+<button  class="timeline"  onclick="versionThree(61);"></button>
+<button  class="timeline"  onclick="versionThree(62);"></button>
+<button  class="timeline"  onclick="versionThree(63);"></button>
+<button  class="timeline"  onclick="versionThree(64);"></button>
+<button  class="timeline"  onclick="versionThree(65);"></button>
+<button  class="timeline"  onclick="versionThree(66);"></button>
+<button  class="timeline"  onclick="versionThree(67);"></button>
+<button  class="timeline"  onclick="versionThree(68);"></button>
+<button  class="timeline"  onclick="versionThree(69);"></button>
+<button  class="timeline"  onclick="versionThree(70);"></button>
+<button  class="timeline"  onclick="versionThree(71);"></button>
+<button  class="timeline"  onclick="versionThree(72);"></button>
+<button  class="timeline"  onclick="versionThree(73);"></button>
+<button  class="timeline"  onclick="versionThree(74);"></button>
+<button  class="timeline"  onclick="versionThree(75);"></button>
+<button  class="timeline"  onclick="versionThree(76);"></button>
+<button  class="timeline"  onclick="versionThree(77);"></button>
+<button  class="timeline"  onclick="versionThree(78);"></button>
+<button  class="timeline"  onclick="versionThree(79);"></button>
+<button  class="timeline"  onclick="versionThree(80);"></button>
+<button  class="timeline"  onclick="versionThree(81);"></button>
+<button  class="timeline"  onclick="versionThree(82);"></button>
+<button  class="timeline"  onclick="versionThree(83);"></button>
+<button  class="timeline"  onclick="versionThree(84);"></button>
+<button  class="timeline"  onclick="versionThree(85);"></button>
+<button  class="timeline"  onclick="versionThree(86);"></button>
+<button  class="timeline"  onclick="versionThree(87);"></button>
+<button  class="timeline"  onclick="versionThree(88);"></button>
+<button  class="timeline"  onclick="versionThree(89);"></button>
+<button  class="timeline"  onclick="versionThree(90);"></button>
+<button  class="timeline"  onclick="versionThree(91);"></button>
+<button  class="timeline"  onclick="versionThree(92);"></button>
+<button  class="timeline"  onclick="versionThree(93);"></button>
+<button  class="timeline"  onclick="versionThree(94);"></button>
+<button  class="timeline"  onclick="versionThree(95);"></button>
+<button  class="timeline"  onclick="versionThree(96);"></button>
+<button  class="timeline"  onclick="versionThree(97);"></button>
+<button  class="timeline"  onclick="versionThree(98);"></button>
+<button  class="timeline"  onclick="versionThree(99);"></button>
+<span class="dragger" id="dragger"></span>
+</div>
+      </li>
+      <li class="nav-item">
+                <a class="nav-link percent-text" href="#"> </a>
+                <button onclick="changeSpeedThreeX();">3x</button>
+<button onclick="changeSpeedOneX();">1x</button>
+            </li>
+    </ul>
+    
+  </div>
+  <div class="navbar-collapse collapse  order-3 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Speed
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+           
+        </ul>
+    </div>
+</nav>
+
+
+
+
+
+    <script>
+      var map;
+      var markers = [];
+       var marker;
+       var forLat;
+       var forLon;
+       var timer;
+       var marker;
+       var i=1;
+       var icon ;
+       var speed = 700;
+ var max=500;
+ var percent;
+ var draggerMax=738;
+ var subdragger;
+ var bounds;
+ var boundArray = [];
+ var dragger = document.getElementById("dragger");
+ var play = document.getElementById("playbtn");
+ var pause = document.getElementById("pausebtn");
+      function initMap() {
+         bounds = new google.maps.LatLngBounds();
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 5
+        });
+
+// var forLat=parseFloat(-34.397);
+// var forLon=parseFloat(150.644);
+// var i = 0;
+// var timer = setInterval(function() {
+//   var marker = new google.maps.Marker({
+//             position: {lat: forLat , lng: forLon},
+//              map: map
+//            });
+
+//           forLat = forLat + 0.100;
+//           forLon = forLon + 0.100;
+//             i++;
+//   if (i === 20) clearInterval(timer);
+// }, 200);
+
+ forLat=parseFloat(-34.397);
+  forLon=parseFloat(150.644);
+    $(".pausebtn").addClass("d-none");
+    $(".playbtn").removeClass("d-none");
+
+  icon = {
+
+                                    // ACTIVE
+
+                                    path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                                    scale: 5,
+                                    strokeWeight: 2.5,
+                                    strokeColor: '#000',
+                                    fillOpacity: 0.8,
+                                    fillColor: '#fff',
+                                    rotation:40
+
+                                };
+           
+      }
+
+
+
+        function versionThree(percent){
+
+            reset();
+            // if (! timer){
+            submax = (percent/100)*max;
+            subdragger = (percent/100)*draggerMax;
+            console.log(subdragger);
+          for( i=1; i<=submax; i++ ){
+             marker = new google.maps.Marker({
+                position: {lat: forLat , lng: forLon},
+                 map: map,
+                 icon:icon,
+                 title:""+i
+               });
+            markers.push(marker);
+              forLat = forLat + 0.100;
+              forLon = forLon + 0.100;
+          }
+            
+             $(".dragger").css("margin-left", parseFloat(subdragger));
+         
+// console.log("dwcdsc"+i);
+//  timer = setInterval(function() {
+//   console.log(i);
+//    marker = new google.maps.Marker({
+//             position: {lat: forLat , lng: forLon},
+//              map: map,
+//                  title:""+i
+//            });
+//             markers.push(marker);
+//           forLat = forLat + 0.100;
+//           forLon = forLon + 0.100;
+//             i++;
+//   if (i === max) clearInterval(timer);
+// }, 200);
+//         }
+}
+
+function FNinterval(){
+  if(i<max){
+    $(".playbtn").addClass("d-none");
+    $(".pausebtn").removeClass("d-none");
+  console.log("FNinterval = "+i);
+
+  timer = setInterval(function() {
+  console.log(i);
+  var a = (i*100)/max;
+  subdragger = (a/100)*draggerMax;
+   marker = new google.maps.Marker({
+            position: {lat: forLat , lng: forLon},
+             map: map,
+              icon:icon,
+                 title:""+i
+           });
+            markers.push(marker);
+            bounds.extend(marker.getPosition());
+           // map.setCenter({lat: forLat , lng: forLon});  
+          // map.fitBounds(bounds);
+             $(".dragger").css("margin-left", parseFloat(subdragger)+"px");
+
+          forLat = forLat + 0.100;
+          forLon = forLon + 0.100;
+         
+            console.log("dragger   "+ subdragger);
+
+            i++;
+  if (i === max) clearInterval(timer);
+}, speed);
+          
+
+
+}
+}
+
+function reset(){
+  // clearInterval(timer);
+  // timer=null;
+   forLat=parseFloat(-34.397);
+  forLon=parseFloat(150.644);
+     for (var i = 0; i < markers.length; i++) {
+             markers[i].setMap(null);
+         }
+       markers=[];
+       boundArray = [];
+}
+
+
+function FNpause(){
+   $(".pausebtn").addClass("d-none");
+    $(".playbtn").removeClass("d-none");
+    clearInterval(timer); 
+    timer = null;
+}
+
+ function changeSpeedThreeX() {
+  FNpause();
+  speed=200;
+  FNinterval();
+
+}
+
+ function changeSpeedOneX() {
+  FNpause();
+  speed=1000;
+  FNinterval();
+
+}
+
+//         var zman = 500,
+//   myVar = null;
+// var i = 0;
+// var max=20;
+// function pls() {
+//   if (! myVar)
+//     myVar = setInterval(sizer, zman);
+// }
+// function changeSpeedThreeX() {
+//   zman = 50,
+//   clearInterval(myVar); 
+//   myVar = null;
+//   if (! myVar)
+//     myVar = setInterval(sizer, zman);
+// }
+
+// function changeSpeedOneX() {
+//   zman = 1000,
+//   clearInterval(myVar); 
+//   myVar = null;
+//   if (! myVar)
+//     myVar = setInterval(sizer, zman);
+// }
+
+// var forLat=parseFloat(-34.397);
+// var forLon=parseFloat(150.644);
+// function sizer() {
+//   if(i<max)
+//   {
+//     console.log(i);
+//    marker = new google.maps.Marker({
+//             position: {lat: forLat , lng: forLon},
+//              map: map,
+//              title:" "+i
+//            });
+//         markers.push(marker);
+//           forLat = forLat + 0.0;
+//           forLon = forLon + 0.50;
+//           i++;
+//           if (i === max) clearInterval(myVar);
+//   }
+// }
+// function reset() {
+//   i=0;
+//   console.log(i);
+// clearInterval(myVar); 
+ 
+//               for (var i = 0; i < markers.length; i++) {
+//              markers[i].setMap(null);
+//          }
+//        markers=[];
+       
+//         forLat=parseFloat(-34.397);
+//  forLon=parseFloat(150.644);
+// }
+    </script>
+    <div class="buttons"> 
+<!--  <button onclick="pls();">play</button>
+<button onclick="changeSpeedThreeX();">3x</button>
+<button onclick="changeSpeedOneX();">1x</button> -->
+<!-- <button onclick="reset();">reset</button> -->
+
+
+
+<br/>
+
+
+
+<!-- <button onclick="versionThree(100);">#100</button> -->
+</div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6v5-2uaq_wusHDktM9ILcqIrlPtnZgEk&callback=initMap"
+    async defer></script>
+  </body>
+</html>
